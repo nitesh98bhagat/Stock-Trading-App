@@ -1,4 +1,4 @@
-function StockTile() {
+function StockTile({ props }) {
   const data = {
     c: 128.87,
     d: -0.27,
@@ -11,34 +11,37 @@ function StockTile() {
   };
 
   return (
-    <div className="flex-col flex bg-zinc-200 dark:bg-zinc-800 hover:text-white rounded-lg p-2 my-1 cursor-pointer hover:scale-105 dark:hover:bg-purple-600 hover:bg-purple-600">
+    <div className="flex-col flex bg-zinc-200 dark:bg-zinc-800 hover:text-white rounded-lg p-3 my-1 cursor-pointer hover:scale-105 dark:hover:bg-purple-600 hover:bg-purple-600">
       {/*headline */}
-      <div className="flex-row flex flex-grow justify-between py-2">
-        <h1 className="font-semibold">META</h1>
+      <div className="flex-row flex flex-grow justify-between ">
+        <h1 className="font-semibold">
+          {props.id}. {props.symbol ?? "Name"}
+        </h1>
         <h1 className="font-semibold">${data.c}</h1>
       </div>
+      <span className="pb-2  text-xs ">{props.name}</span>
 
       {/* Details Row */}
-      <div className="flex-row flex space-x-5 w-full">
+      <div className="flex-row flex space-x-5 w-full ">
         {/* High price */}
-        <div className="flex-col flex text-sm text-green-500">
-          <h1 className="text-xs">Highest</h1>
-          <span className="">{data.h}</span>
+        <div className="flex-col flex text-xs text-green-500">
+          <h1>Highest</h1>
+          <span>{data.h}</span>
         </div>
         {/* Low price */}
-        <div className="flex-col flex text-sm text-red-500 hover:dark:text-red-300">
-          <h1 className="text-xs">Lowest </h1>
+        <div className="flex-col flex text-xs text-red-500 hover:dark:text-red-300">
+          <h1>Lowest </h1>
           <span className="">{data.l}</span>
         </div>
         {/* open price */}
-        <div className="flex-col flex text-sm">
-          <h1 className="text-xs">Open </h1>
+        <div className="flex-col flex text-xs">
+          <h1>Open </h1>
 
           <span className="">{data.o}</span>
         </div>
         {/* open price */}
-        <div className="flex-col flex text-sm">
-          <h1 className="text-xs"> Close</h1>
+        <div className="flex-col flex text-xs">
+          <h1> Close</h1>
           <span className="">{data.pc}</span>
         </div>
         {/* Difference in percentage */}
