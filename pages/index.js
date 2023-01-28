@@ -150,7 +150,7 @@ function HomePage() {
           {stockList.length / 2} Top Performing Stocks
         </h1>
 
-        {stockList.map((e) => <StockTile props={e} />).splice(0, 8)}
+        {stockList.map((e) => <StockTile key={e.id} props={e} />).splice(0, 8)}
       </div>
     </div>
   );

@@ -55,9 +55,8 @@ function AppLayout({ children }) {
               link: "/watchlist",
             },
           ].map((e, i) => (
-            <Link href={e.link}>
+            <Link key={i} href={e.link}>
               <button
-                key={i}
                 onClick={() => setMenuIndex(i)}
                 className={`py-2 w-full flex flex-row items-center sm:px-2 md:px-3 lg:px-8 space-x-2 ${
                   menuIndex === i &&

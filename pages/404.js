@@ -8,7 +8,7 @@ function NotFoundPage() {
       <FaHeartBroken size={150} />
       <h1 className="text-6xl font-bold">Hmm, Sorry</h1>
       <h1 className="text-2xl font-bold">
-        We can't find what you are looking for.
+        {" We can't find what you are looking for."}
       </h1>
       <Link href={"/"}>
         <button className="p-2 bg-purple-800 rounded-lg my-5">
