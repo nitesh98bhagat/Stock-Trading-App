@@ -1,20 +1,20 @@
 import { Menu } from "@headlessui/react";
-import { useTheme } from "next-themes";
 import Image from "next/image";
-import Link from "next/link";
 import { Fragment, useEffect, useState } from "react";
-import { AiFillHome, AiFillShopping, AiOutlineUser } from "react-icons/ai";
 import {
-  BsFillMoonFill,
-  BsFillPeopleFill,
-  BsFillSunFill,
-  BsGraphUp,
-} from "react-icons/bs";
+  AiFillHome,
+  AiFillShopping,
+  AiOutlineEye,
+  AiOutlineHeart,
+  AiOutlineUser,
+} from "react-icons/ai";
+
 import { IoMdArrowDropdown } from "react-icons/io";
 import { MdSettings, MdSpaceHomeTab } from "react-icons/md";
 import Header from "../components/Header";
 import MyPortfolioTab from "../components/TabBarView/MyPortfolioTab";
 import HomeTab from "../components/TabBarView/HomeTab";
+import { BsFillArrowUpCircleFill } from "react-icons/bs";
 
 export default function Home() {
   // This is to handle sidebar's change menu funtionality
@@ -28,10 +28,11 @@ export default function Home() {
   return (
     <div className="flex-row flex min-h-screen relative justify-start items-start">
       {/* sidebar */}
-      <div className="flex-col flex w-1/6 sticky top-0 min-h-screen  border-r border-zinc-100 dark:border-zinc-800">
-        <h1 className="text-xl mx-8 my-3  ">
-          <span className="bg-purple-500 px-2 py-0.5 rounded-lg  font-bold italic">
-            Stock
+      <div className="flex-col hidden md:flex w-1/6 sticky top-0 min-h-screen  border-r border-zinc-100 dark:border-zinc-800">
+        <h1 className="text-xl mx-8 my-3  flex items-center space-x-1">
+          <span className="bg-purple-500 text-white px-2 py-0.5 rounded-lg  font-bold italic flex w-fit items-center space-x-1">
+            <BsFillArrowUpCircleFill />
+            <span>Stock</span>
           </span>
           <span>.ly</span>
         </h1>
@@ -39,13 +40,14 @@ export default function Home() {
         {[
           { title: "Home", icon: <AiFillHome size={20} /> },
           { title: "My Portfolio", icon: <AiOutlineUser size={20} /> },
+          { title: "Watch list", icon: <AiOutlineEye size={20} /> },
         ].map((e, i) => (
           <button
             key={i}
             onClick={() => setMenuIndex(i)}
-            className={`py-2 w-full flex flex-row items-center px-8 space-x-2 ${
+            className={`py-2 w-full flex flex-row items-center sm:px-2 md:px-3 lg:px-8 space-x-2 ${
               menuIndex === i &&
-              "bg-purple-300 dark:bg-purple-600 border-r-4 border-purple-800"
+              "bg-purple-300 dark:bg-purple-600 border-r-4  border-purple-800"
             } dark:hover:bg-purple-800/20 hover:bg-purple-200 cursor-pointer`}
           >
             {e.icon ?? ""}
