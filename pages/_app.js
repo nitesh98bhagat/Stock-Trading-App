@@ -1,6 +1,7 @@
 import { ThemeProvider } from "next-themes";
 import Head from "next/head";
 import { Provider } from "react-redux";
+import AppLayout from "../components/AppLayout";
 import { store } from "../gobalStore/store";
 import "../styles/globals.css";
 
@@ -10,12 +11,13 @@ function MyApp({ Component, pageProps }) {
       <Head>
         <title>Stock.ly · By Nitesh Bhagat</title>
       </Head>
-
-      <Provider store={store}>
-        <ThemeProvider enableSystem={true} attribute="class">
-          <Component {...pageProps} />
-        </ThemeProvider>
-      </Provider>
+      <AppLayout>
+        <Provider store={store}>
+          <ThemeProvider enableSystem={true} attribute="class">
+            <Component {...pageProps} />
+          </ThemeProvider>
+        </Provider>
+      </AppLayout>
     </div>
   );
 }

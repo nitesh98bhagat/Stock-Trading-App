@@ -34,18 +34,18 @@ function HomeTab() {
   return (
     <div className="flex-row flex p-5 justify-start items-start">
       {/* Selected stock performance details */}
-      <div className="bg-zinc-100 dark:bg-zinc-900 rounded-xl p-3 flex-col flex flex-1 space-y-3">
+      <div className=" rounded-xl p-3 flex-col flex flex-1 space-y-3">
         {/* Header- Logo,Symbol & Name */}
         <div className="flex-row flex items-center ">
           <h1 className="text-xl font-bold px-3">{data.ticker}</h1>
 
-          <button className="bg-purple-700 px-3 py-1 rounded-full font-semibold flex flex-row items-center space-x-2 ml-auto">
+          <button className="bg-purple-700 px-3 text-white py-1 rounded-full font-semibold flex flex-row items-center space-x-2 ml-auto">
             <AiFillEye />
             <span>Add to Watchlist</span>
           </button>
         </div>
         {/* Graph performance */}
-        <div className="container bg-black/30 rounded-lg p-3 h-60 text-center ">
+        <div className="container bg-black/10 rounded-lg p-3 h-96 text-center ">
           <h1 className="text-6xl text-zinc-800">
             {"Oops!!! Can't load the graph"}
           </h1>
@@ -107,9 +107,15 @@ function HomeTab() {
             <span className="text-base">{data.shareOutstanding}</span>
           </div>
         </div>
-        <button className="bg-purple-800 rounded-xl flex-1 p-2 text-2xl">
-          Buy
-        </button>
+
+        <div className="flex py-3">
+          <button className="bg-purple-800 text-white rounded-xl flex-1 p-1 text-lg">
+            Buy
+          </button>
+          <button className=" text-white rounded-xl flex-1 p-1 text-lg">
+            Add to watchlist
+          </button>
+        </div>
         {/* -----------COMPANY PROFILE--------------------------- */}
         {/* Share Outstanding */}
         <div className="flex-col flex text-sm -space-y-1">
@@ -130,7 +136,7 @@ function HomeTab() {
         </div>
       </div>
       {/* Top Performing Stocks */}
-      <div className="p-2 rounded-sm h-full mx-5 bg-zinc-100 dark:bg-zinc-900 w-1/3">
+      <div className="p-2 rounded-xl h-full mx-5 bg-zinc-100 dark:bg-zinc-900 w-1/3">
         <h1 className="p-3 text-xl font-bold">Top Performing Stocks</h1>
 
         <StockTile />
