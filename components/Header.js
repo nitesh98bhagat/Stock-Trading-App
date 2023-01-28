@@ -6,26 +6,10 @@ import React, { useEffect, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { BsFillMoonFill, BsFillSunFill } from "react-icons/bs";
 import { MdClear } from "react-icons/md";
+import { useSelector } from "react-redux";
 
 function Header() {
-  const people = [
-    { id: 1, name: "Apple Inc", symbol: "APPL" },
-    { id: 2, name: "Meta Platforms, Inc.(Facebook)", symbol: "META" },
-    { id: 3, name: "Microsoft Corporation", symbol: "MSFT" },
-    { id: 4, name: "Alphabet Inc (Google)", symbol: "GOOG" },
-    { id: 5, name: "Tesla, Inc.", symbol: "TSLA" },
-    { id: 6, name: "NVIDIA Corporation", symbol: "NVDA" },
-    { id: 7, name: "Intel Corporation", symbol: "INTC" },
-    { id: 8, name: "Alibaba Group Holding Limited", symbol: "BABA" },
-    { id: 9, name: "Salesforce, Inc.", symbol: "CRM" },
-    { id: 10, name: "Advanced Micro Devices, Inc.", symbol: "AMD" },
-    { id: 11, name: "PayPal Holdings, Inc.", symbol: "PYPL" },
-    { id: 12, name: "Electronic Arts Inc.", symbol: "EA" },
-    { id: 13, name: "Match Group, Inc.", symbol: "MTCH" },
-    { id: 14, name: "The Trade Desk, Inc.", symbol: "TTD" },
-    { id: 15, name: "Activision Blizzard, Inc.", symbol: "ATVI" },
-    { id: 16, name: "Amazon.com, Inc.", symbol: "AMZN" },
-  ];
+  const stockList = useSelector((state) => state.stockList.predefinedStockList);
 
   const [selectedPerson, setSelectedPerson] = useState("");
   const [query, setQuery] = useState("");
@@ -98,16 +82,12 @@ function Header() {
             </Combobox.Button>
             <Combobox.Options className="absolute w-full top-10   ">
               {query === ""
-                ? people.id
-                : people
-                    .filter((person) => {
+                ? stockList.id
+                : stockList
+                    .filter((e) => {
                       return (
-                        person.name
-                          .toLowerCase()
-                          .includes(query.toLowerCase()) ||
-                        person.symbol
-                          .toLowerCase()
-                          .includes(query.toLowerCase())
+                        e.name.toLowerCase().includes(query.toLowerCase()) ||
+                        e.symbol.toLowerCase().includes(query.toLowerCase())
                       );
                     })
                     .splice(0, 8)
