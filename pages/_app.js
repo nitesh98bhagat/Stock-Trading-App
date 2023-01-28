@@ -11,13 +11,13 @@ function MyApp({ Component, pageProps }) {
       <Head>
         <title>Stock.ly · By Nitesh Bhagat</title>
       </Head>
-      <AppLayout>
-        <Provider store={store}>
-          <ThemeProvider enableSystem={true} attribute="class">
+      <Provider store={store}>
+        <ThemeProvider enableSystem={true} attribute="class">
+          <AppLayout>
             <Component {...pageProps} />
-          </ThemeProvider>
-        </Provider>
-      </AppLayout>
+          </AppLayout>
+        </ThemeProvider>
+      </Provider>
     </div>
   );
 }

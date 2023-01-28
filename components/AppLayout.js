@@ -12,10 +12,10 @@ import {
 import { IoMdArrowDropdown } from "react-icons/io";
 import { MdSettings, MdSpaceHomeTab } from "react-icons/md";
 import Header from "../components/Header";
-import MyPortfolioTab from "../components/TabBarView/MyPortfolioTab";
-import HomeTab from "../components/TabBarView/HomeTab";
+
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 function AppLayout({ children }) {
   // This is to handle sidebar's change menu funtionality
@@ -43,21 +43,31 @@ function AppLayout({ children }) {
           </h1>
 
           {[
-            { title: "Home", icon: <AiFillHome size={20} /> },
-            { title: "My Portfolio", icon: <AiOutlineUser size={20} /> },
-            { title: "Watch list", icon: <AiOutlineEye size={20} /> },
+            { title: "Home", icon: <AiFillHome size={20} />, link: "/" },
+            {
+              title: "My Portfolio",
+              icon: <AiOutlineUser size={20} />,
+              link: "/my-portfolio",
+            },
+            {
+              title: "Watch list",
+              icon: <AiOutlineEye size={20} />,
+              link: "/watchlist",
+            },
           ].map((e, i) => (
-            <button
-              key={i}
-              onClick={() => setMenuIndex(i)}
-              className={`py-2 w-full flex flex-row items-center sm:px-2 md:px-3 lg:px-8 space-x-2 ${
-                menuIndex === i &&
-                "bg-purple-300 dark:bg-purple-600 border-r-4  border-purple-800"
-              } dark:hover:bg-purple-800/20 hover:bg-purple-200 cursor-pointer`}
-            >
-              {e.icon ?? ""}
-              <span>{e.title}</span>
-            </button>
+            <Link href={e.link}>
+              <button
+                key={i}
+                onClick={() => setMenuIndex(i)}
+                className={`py-2 w-full flex flex-row items-center sm:px-2 md:px-3 lg:px-8 space-x-2 ${
+                  menuIndex === i &&
+                  "bg-purple-300 dark:bg-purple-600 border-r-4  border-purple-800"
+                } dark:hover:bg-purple-800/20 hover:bg-purple-200 cursor-pointer`}
+              >
+                {e.icon ?? ""}
+                <span>{e.title}</span>
+              </button>
+            </Link>
           ))}
           <div className="mt-auto"></div>
 
@@ -83,21 +93,31 @@ function AppLayout({ children }) {
               <div className="absolute bottom-16 w-full">
                 <Menu.Items className=" flex-col flex mx-2   shadow-2xl border border-zinc-300 dark:border-zinc-700  rounded-md overflow-hidden">
                   {[
-                    { title: "My Profile", icon: <AiOutlineUser size={20} /> },
+                    {
+                      title: "My Profile",
+                      icon: <AiOutlineUser size={20} />,
+                      link: "/my-account",
+                    },
 
-                    { title: "Settings ", icon: <MdSettings size={20} /> },
-                  ].map((link) => (
+                    {
+                      title: "Settings ",
+                      icon: <MdSettings size={20} />,
+                      link: "/settings",
+                    },
+                  ].map((e) => (
                     /* Use the `active` state to conditionally style the active item. */
-                    <Menu.Item key={link.href} as={Fragment}>
+                    <Menu.Item key={e.href} as={Fragment}>
                       {({ active }) => (
-                        <div
-                          className={`py-1 px-3 flex flex-row items-center space-x-1 cursor-pointer ${
-                            active && "bg-zinc-200 dark:bg-zinc-700"
-                          } ${!active && "bg-zinc-100 dark:bg-zinc-800 "}`}
-                        >
-                          {link.icon}
-                          <span>{link.title}</span>
-                        </div>
+                        <Link href={e.link}>
+                          <div
+                            className={`py-1 px-3 flex flex-row items-center space-x-1 cursor-pointer ${
+                              active && "bg-zinc-200 dark:bg-zinc-700"
+                            } ${!active && "bg-zinc-100 dark:bg-zinc-800 "}`}
+                          >
+                            {e.icon}
+                            <span>{e.title}</span>
+                          </div>
+                        </Link>
                       )}
                     </Menu.Item>
                   ))}

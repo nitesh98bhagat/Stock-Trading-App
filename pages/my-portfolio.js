@@ -1,10 +1,9 @@
 import React from "react";
 import { BsFolder2Open } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
-import { decrement, increment } from "../../features/counterSlice";
-import StockTile from "../StockTile";
+import { decrement, increment } from "../features/counterSlice";
 
-function MyPortfolioTab() {
+function MyPortfolioPage() {
   const count = useSelector((state) => state.counter.value);
   const dispatch = useDispatch();
   return (
@@ -52,4 +51,4 @@ function MyPortfolioTab() {
   );
 }
 
-export default MyPortfolioTab;
+export default MyPortfolioPage;
