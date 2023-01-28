@@ -3,9 +3,12 @@ import { MdAttachMoney } from "react-icons/md";
 import { HiCurrencyRupee } from "react-icons/hi";
 import StockTile from "../components/StockTile";
 import { AiFillEye } from "react-icons/ai";
+import { useSelector } from "react-redux";
 
 function HomePage() {
-  const data = {
+  const stockList = useSelector((state) => state.stockList.predefinedStockList);
+
+  const companyProfile = {
     country: "US",
     currency: "USD",
     exchange: "NASDAQ NMS - GLOBAL MARKET",
@@ -37,7 +40,9 @@ function HomePage() {
       <div className=" rounded-xl p-3 flex-col flex flex-1 space-y-3">
         {/* Header- Logo,Symbol & Name */}
         <div className="flex-row flex items-center ">
-          <h1 className="text-xl font-bold px-3 mr-auto">{data.ticker}</h1>
+          <h1 className="text-xl font-bold px-3 mr-auto">
+            {companyProfile.ticker}
+          </h1>
 
           <button className="bg-purple-700 px-3 text-white py-1 rounded-full font-semibold flex flex-row items-center space-x-2 mx-5">
             <MdAttachMoney />
@@ -50,14 +55,18 @@ function HomePage() {
         </div>
 
         {/* Stock Details */}
-        {/* -------------QUOTE DATA--------------- */}
+        {/* -------------QUOTE companyProfile--------------- */}
         {/*headline */}
         <div className="flex-row flex flex-grow items-center py-2">
-          <img src={data.logo} alt="logo" className="w-10 rounded-full" />
+          <img
+            src={companyProfile.logo}
+            alt="logo"
+            className="w-10 rounded-full"
+          />
 
           <div className=" px-3 flex-col flex">
-            <h1 className="text-xl font-bold ">{data.name}</h1>
-            <span className="text-xs">Country: {data.country}</span>
+            <h1 className="text-xl font-bold ">{companyProfile.name}</h1>
+            <span className="text-xs">Country: {companyProfile.country}</span>
           </div>
 
           <div className=" px-3 flex-col flex ml-auto">
@@ -98,12 +107,14 @@ function HomePage() {
           {/* Market Capitalization */}
           <div className="flex-col flex text-sm -space-y-1">
             <h1 className="text-sm"> Market Capitalization</h1>
-            <span className="text-base">{data.marketCapitalization}</span>
+            <span className="text-base">
+              {companyProfile.marketCapitalization}
+            </span>
           </div>
           {/* Share Outstanding */}
           <div className="flex-col flex text-sm -space-y-1">
             <h1 className="text-sm">Outstanding</h1>
-            <span className="text-base">{data.shareOutstanding}</span>
+            <span className="text-base">{companyProfile.shareOutstanding}</span>
           </div>
         </div>
 
@@ -117,31 +128,29 @@ function HomePage() {
         {/* Share Outstanding */}
         <div className="flex-col flex text-sm -space-y-1">
           <h1 className="text-sm">Exchange</h1>
-          <span className="text-base">{data.exchange}</span>
+          <span className="text-base">{companyProfile.exchange}</span>
         </div>
         <div className="flex-col flex text-sm -space-y-1">
           <h1 className="text-sm">I.P.O Date</h1>
-          <span className="text-base">{data.ipo}</span>
+          <span className="text-base">{companyProfile.ipo}</span>
         </div>
         <div className="flex-col flex text-sm -space-y-1">
           <h1 className="text-sm">Industry</h1>
-          <span className="text-base">{data.finnhubIndustry}</span>
+          <span className="text-base">{companyProfile.finnhubIndustry}</span>
         </div>
         <div className="flex-col flex text-sm -space-y-1">
           <h1 className="text-sm">Currency</h1>
-          <span className="text-base">{data.currency}</span>
+          <span className="text-base">{companyProfile.currency}</span>
         </div>
       </div>
+
       {/* Top Performing Stocks */}
       <div className="p-2 rounded-xl h-full mx-5 bg-zinc-100 dark:bg-zinc-900 w-1/3">
-        <h1 className="p-3 text-xl font-bold">Top Performing Stocks</h1>
+        <h1 className="p-3 text-xl font-bold">
+          {stockList.length / 2} Top Performing Stocks
+        </h1>
 
-        <StockTile />
-        <StockTile />
-        <StockTile />
-        <StockTile />
-        <StockTile />
-        <StockTile />
+        {stockList.map((e) => <StockTile props={e} />).splice(0, 8)}
       </div>
     </div>
   );
