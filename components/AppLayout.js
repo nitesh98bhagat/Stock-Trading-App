@@ -18,6 +18,10 @@ import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import BottomNavbar from "./BottomNavbar";
+import { auth } from "../firebaseConfig";
+import { FaSignOutAlt } from "react-icons/fa";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { getAuth } from "firebase/auth";
 
 function AppLayout({ children }) {
   // This is to handle sidebar's change menu funtionality
@@ -30,7 +34,18 @@ function AppLayout({ children }) {
       ? false
       : true && router.pathname === "/404"
       ? false
+      : true && router.pathname === "/signup"
+      ? false
       : true;
+
+  const auth = getAuth();
+  const [user, loading] = useAuthState(auth);
+
+  useEffect(() => {
+    if (!user) {
+      router.push("/login");
+    }
+  }, []);
 
   return (
     <div className="flex-row flex min-h-screen relative justify-start items-start">
@@ -38,7 +53,7 @@ function AppLayout({ children }) {
       {showHeader && (
         <div className="flex-col hidden md:flex w-1/6 sticky top-0 min-h-screen  border-r border-zinc-100 dark:border-zinc-800">
           <h1 className="text-xl mx-8 my-3  flex items-center space-x-1">
-            <span className="bg-purple-500 text-white px-2 py-0.5 rounded-lg  font-bold italic flex w-fit items-center space-x-1">
+            <span className="bg-purple-800 text-white px-2 py-0.5 rounded-lg  font-bold italic flex w-fit items-center space-x-1">
               <BsFillArrowUpCircleFill />
               <span>Stock</span>
             </span>
@@ -78,10 +93,10 @@ function AppLayout({ children }) {
                 <div className="flex-row flex  items-center justify-around mt-auto p-2 bg-zinc-100 dark:bg-zinc-900 rounded-xl m-2">
                   <div className="flex-col flex justify-start items-start">
                     <p className="text-xs">Signed in as</p>
-                    <h1 className="text-sm">Nitesh Bhagat</h1>
+                    <h1 className="text-sm">{!loading && user?.displayName}</h1>
                   </div>
                   <Image
-                    src={"/defaultUser.jpg"}
+                    src={user?.photoURL ?? "/defaultUser.jpg"}
                     width={40}
                     height={30}
                     alt="user_dp"
@@ -109,6 +124,11 @@ function AppLayout({ children }) {
                       title: "Settings ",
                       icon: <MdSettings size={20} />,
                       link: "/settings",
+                    },
+                    {
+                      title: "Logout ",
+                      icon: <FaSignOutAlt size={20} />,
+                      link: "/logout",
                     },
                   ].map((e) => (
                     /* Use the `active` state to conditionally style the active item. */
@@ -140,7 +160,7 @@ function AppLayout({ children }) {
         {showHeader && <Header />}
 
         {children}
-        <BottomNavbar />
+        {showHeader && <BottomNavbar />}
       </div>
     </div>
   );

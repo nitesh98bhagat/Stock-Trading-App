@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { MdAttachMoney } from "react-icons/md";
 import { HiCurrencyRupee } from "react-icons/hi";
 import StockTile from "../components/StockTile";
@@ -172,7 +172,7 @@ function HomePage() {
           {stockList.length / 2} Top Performing Stocks {list.length}
         </h1>
 
-        {list.map((e) => (
+        {stockList.map((e) => (
           <StockTile key={e.id} props={e} />
         ))}
       </div>
@@ -181,16 +181,3 @@ function HomePage() {
 }
 
 export default HomePage;
-
-// Components
-
-function PriceCard({ icon, title, subtitle, lowerline }) {
-  return (
-    <div className="bg-purple-400 dark:text-purple-900 text-purple-100 hover:scale-105 cursor-pointer   p-5  rounded-md flex-col flex justify-start items-start ">
-      {icon ?? <HiCurrencyRupee size={35} />}
-      <span>{title ?? "Total Earnings"}</span>
-      <h1 className="text-xl font-black ">{subtitle ?? "$14.5K"}</h1>
-      <p className="text-xs">{lowerline ?? "Lorem ipsum dolor sit."}</p>
-    </div>
-  );
-}

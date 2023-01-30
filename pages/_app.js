@@ -1,3 +1,4 @@
+import { getAuth } from "firebase/auth";
 import { ThemeProvider } from "next-themes";
 import Head from "next/head";
 import { Provider } from "react-redux";

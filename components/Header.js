@@ -106,7 +106,7 @@ function Header() {
                         key={item.id}
                         value={item.name}
                         className={({ active }) =>
-                          `relative cursor-default flex space-x-3 select-none py-2  pl-10 pr-4 text-zinc-900 dark:text-zinc-400 shadow-lg ${
+                          `relative cursor-default flex space-x-3 select-none py-2  pl-5 pr-4 text-zinc-900 dark:text-zinc-400 shadow-lg ${
                             active
                               ? "bg-zinc-200 dark:bg-zinc-800"
                               : "bg-zinc-100 dark:bg-zinc-900 "
