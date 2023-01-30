@@ -1,7 +1,7 @@
 import React from "react";
 
 function WatchList() {
-  return <div>WatchList</div>;
+  return <div className="min-h-screen">WatchList</div>;
 }
 
 export default WatchList;

@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   predefinedStockList: [
-    { id: 1, name: "Apple Inc", symbol: "APPL" },
+    { id: 1, name: "Apple Inc", symbol: "AAPL" },
     { id: 2, name: "Meta Platforms, Inc.(Facebook)", symbol: "META" },
     { id: 3, name: "Microsoft Corporation", symbol: "MSFT" },
     { id: 4, name: "Alphabet Inc (Google)", symbol: "GOOG" },

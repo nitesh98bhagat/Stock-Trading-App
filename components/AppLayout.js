@@ -2,7 +2,8 @@ import { Menu } from "@headlessui/react";
 import Image from "next/image";
 import { Fragment, useEffect, useState } from "react";
 import {
-  AiFillHome,
+  AiFillBug,
+  AiOutlineHome,
   AiFillShopping,
   AiOutlineEye,
   AiOutlineHeart,
@@ -16,12 +17,14 @@ import Header from "../components/Header";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import BottomNavbar from "./BottomNavbar";
 
 function AppLayout({ children }) {
   // This is to handle sidebar's change menu funtionality
-  const [menuIndex, setMenuIndex] = useState(0);
 
   const router = useRouter();
+  const currentMenuIndex = router.pathname;
+
   const showHeader =
     router.pathname === "/login"
       ? false
@@ -43,7 +46,7 @@ function AppLayout({ children }) {
           </h1>
 
           {[
-            { title: "Home", icon: <AiFillHome size={20} />, link: "/" },
+            { title: "Home", icon: <AiOutlineHome size={20} />, link: "/" },
             {
               title: "My Portfolio",
               icon: <AiOutlineUser size={20} />,
@@ -57,9 +60,8 @@ function AppLayout({ children }) {
           ].map((e, i) => (
             <Link key={i} href={e.link}>
               <button
-                onClick={() => setMenuIndex(i)}
                 className={`py-2 w-full flex flex-row items-center sm:px-2 md:px-3 lg:px-8 space-x-2 ${
-                  menuIndex === i &&
+                  currentMenuIndex === e.link &&
                   "bg-purple-300 dark:bg-purple-600 border-r-4  border-purple-800"
                 } dark:hover:bg-purple-800/20 hover:bg-purple-200 cursor-pointer`}
               >
@@ -92,6 +94,11 @@ function AppLayout({ children }) {
               <div className="absolute bottom-16 w-full">
                 <Menu.Items className=" flex-col flex mx-2   shadow-2xl border border-zinc-300 dark:border-zinc-700  rounded-md overflow-hidden">
                   {[
+                    {
+                      title: "Testing",
+                      icon: <AiFillBug size={20} />,
+                      link: "/testing",
+                    },
                     {
                       title: "My Profile",
                       icon: <AiOutlineUser size={20} />,
@@ -133,6 +140,7 @@ function AppLayout({ children }) {
         {showHeader && <Header />}
 
         {children}
+        <BottomNavbar />
       </div>
     </div>
   );
