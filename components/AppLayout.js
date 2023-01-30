@@ -48,7 +48,7 @@ function AppLayout({ children }) {
   }, []);
 
   return (
-    <div className="flex-row flex min-h-screen relative justify-start items-start">
+    <div className="flex-row flex min-h-screen  justify-start items-start">
       {/* sidebar */}
       {showHeader && (
         <div className="flex-col hidden md:flex w-1/6 sticky top-0 min-h-screen  border-r border-zinc-100 dark:border-zinc-800">
@@ -158,8 +158,7 @@ function AppLayout({ children }) {
       <div className="flex-col flex flex-grow">
         {/* header */}
         {showHeader && <Header />}
-
-        {children}
+        <div className="min-h-screen">{children}</div>
         {showHeader && <BottomNavbar />}
       </div>
     </div>
