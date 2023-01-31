@@ -62,7 +62,7 @@ function Header() {
   };
 
   return (
-    <nav className=" flex sticky top-0 bg-white dark:bg-neutral-900  z-50 flex-row items-center justify-start w-full  sm:px-10 py-2 border-b border-zinc-100  dark:border-slate-800 ">
+    <nav className=" flex sticky top-0 bg-white dark:bg-neutral-900  z-50 flex-row items-center justify-start w-full  sm:px-10 px-3 py-2 border-b border-zinc-100  dark:border-slate-800 ">
       {/* search bar */}
       {
         <div className="flex-row flex  items-center justify-center bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded-md w-full sm:w-1/2 md:w-1/3  mr-auto    focus-within:flex-grow  focus-within:ring-purple-300/30 focus-within:ring-1 relative">

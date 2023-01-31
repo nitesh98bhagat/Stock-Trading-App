@@ -30,13 +30,13 @@ function HomePage() {
 
   useEffect(() => {
     getCompanyProfileData(selectedStock?.symbol).then((e) => {
-      console.log(e);
+      console.log({ ...selectedStock, ...e });
       setSelectedStock({ ...selectedStock, ...e });
     });
   }, []);
 
   return (
-    <div className="flex-row flex sm:p-5 justify-start items-start sm:relative">
+    <div className="flex-row flex sm:p-5 justify-start items-start sm:relative min-h-screen">
       {/* Selected stock performance details */}
       <div className=" sm:sticky sm:top-0 rounded-xl p-3 flex-col flex flex-1 space-y-3">
         {/* Header- Logo,Symbol & Name */}

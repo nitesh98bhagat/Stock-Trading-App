@@ -19,7 +19,7 @@ function MyPortfolioPage() {
           <h1>{myList.length}</h1>
         </div>
       ) : (
-        <div className="flex-row flex p-3 space-x-3 ">
+        <div className="flex-row flex p-3 space-x-3 min-h-screen">
           {/* My portfolio stock list */}
           <div className="p-2 rounded-lg h-full  bg-zinc-100 dark:bg-zinc-900 w-1/3 hidden sm:block">
             <h1 className="p-3 text-xl font-bold ">My Portfolio</h1>
