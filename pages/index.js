@@ -1,47 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdAttachMoney } from "react-icons/md";
 import { HiCurrencyRupee } from "react-icons/hi";
 import StockTile from "../components/StockTile";
 import { AiFillEye } from "react-icons/ai";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-
-const testData = [];
+import { addToMyWatchList, addToPortfolio } from "../features/stockSlice";
 
 function HomePage() {
-  const stockList = useSelector((state) => state.stockList.predefinedStockList);
-  const [list, setList] = useState([]);
+  const dispatch = useDispatch();
 
-  const companyProfile = {
-    country: "US",
-    currency: "USD",
-    exchange: "NASDAQ NMS - GLOBAL MARKET",
-    finnhubIndustry: "Automobiles",
-    ipo: "2010-06-09",
-    logo: "https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/TSLA.svg",
-    marketCapitalization: 561764.1400529998,
-    name: "Tesla Inc",
-    phone: "15125168177.0",
-    shareOutstanding: 3157.75,
-    ticker: "TSLA",
-    weburl: "https://www.tesla.com/",
-  };
+  const fetchedStockList = useSelector(
+    (state) => state.stockList.fetchedStockList
+  );
 
-  const quote = {
-    c: 145.93,
-    d: 1.97,
-    dp: 1.3684,
-    h: 147.23,
-    l: 143.1,
-    o: 143.155,
-    pc: 143.96,
-    t: 1674853204,
-  };
+  const [selectedStock, setSelectedStock] = useState(fetchedStockList[0]);
 
-  const getStocksData = async (symbol) => {
+  const getCompanyProfileData = async (symbol) => {
     const resData = await axios
       .get(
-        `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=cf96kkaad3i9ljn7ea10cf96kkaad3i9ljn7ea1g`
+        `https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=cf96kkaad3i9ljn7ea10cf96kkaad3i9ljn7ea1g`
       )
       .catch((error) => {
         console.error("Error", error.message);
@@ -50,6 +28,13 @@ function HomePage() {
     return resData?.data;
   };
 
+  useEffect(() => {
+    getCompanyProfileData(selectedStock?.symbol).then((e) => {
+      console.log(e);
+      setSelectedStock({ ...selectedStock, ...e });
+    });
+  }, []);
+
   return (
     <div className="flex-row flex sm:p-5 justify-start items-start sm:relative">
       {/* Selected stock performance details */}
@@ -57,14 +42,20 @@ function HomePage() {
         {/* Header- Logo,Symbol & Name */}
         <div className="flex-row flex items-center ">
           <h1 className="text-xl font-bold px-3 mr-auto">
-            #{companyProfile.ticker}
+            #{selectedStock?.symbol}
           </h1>
 
-          <button className="bg-purple-700 px-3   text-white py-1 rounded-full font-semibold hidden sm:flex flex-row items-center space-x-2 mx-5">
+          <button
+            onClick={() => dispatch(addToPortfolio(selectedStock))}
+            className="bg-purple-700 px-3   text-white py-1 rounded-full font-semibold hidden sm:flex flex-row items-center space-x-2 mx-5"
+          >
             <MdAttachMoney />
             <span>BUY</span>
           </button>
-          <button className="bg-purple-400 sm:bg-purple-700  px-3 text-white py-1 rounded-full font-semibold flex flex-row items-center space-x-2 ">
+          <button
+            onClick={() => dispatch(addToMyWatchList(selectedStock))}
+            className="bg-purple-400 sm:bg-purple-700  px-3 text-white py-1 rounded-full font-semibold flex flex-row items-center space-x-2 "
+          >
             <AiFillEye />
             <span>Add to Watchlist</span>
           </button>
@@ -75,24 +66,28 @@ function HomePage() {
         {/*headline */}
         <div className="flex-row flex flex-grow items-center py-2">
           <img
-            src={companyProfile.logo}
+            src={selectedStock?.logo ?? "/defaultUser.jpg"}
             alt="logo"
             className="w-10 rounded-full"
           />
 
           <div className=" px-3 flex-col flex">
-            <h1 className="text-xl font-bold ">{companyProfile.name}</h1>
-            <span className="text-xs">Country: {companyProfile.country}</span>
+            <h1 className="text-xl font-bold ">{selectedStock?.name}</h1>
+            <span className="text-xs">Country: {selectedStock?.country}</span>
           </div>
 
           <div className=" px-3 flex-col flex ml-auto">
-            <h1 className="text-xl font-bold ">${quote.c}</h1>
+            <h1 className="text-xl font-bold ">${selectedStock?.c}</h1>
             <span
               className={`${
-                quote.dp > 0 ? "text-green-600" : "text-red-500  "
+                selectedStock?.dp > 0 ? "text-green-600" : "text-red-500  "
               }`}
             >
-              {`${quote.dp > 0 ? `+${quote.dp}%` : `${quote.dp}%`}`}
+              {`${
+                selectedStock?.dp > 0
+                  ? `+${selectedStock?.dp}%`
+                  : `${selectedStock?.dp}%`
+              }`}
             </span>
           </div>
         </div>
@@ -102,35 +97,35 @@ function HomePage() {
           {/* High price */}
           <div className="flex-col flex text-sm text-green-500 -space-y-1">
             <h1 className="text-sm">Highest</h1>
-            <span className="text-base">${quote.h}</span>
+            <span className="text-base">${selectedStock?.h}</span>
           </div>
           {/* Low price */}
           <div className="flex-col flex text-sm text-red-500 hover:dark:text-red-300 -space-y-1">
             <h1 className="text-sm">Lowest </h1>
-            <span className="text-base">${quote.l}</span>
+            <span className="text-base">${selectedStock?.l}</span>
           </div>
           {/* open price */}
           <div className="flex-col flex text-sm -space-y-1">
             <h1 className="text-sm">Open </h1>
 
-            <span className="text-base">{quote.o}</span>
+            <span className="text-base">{selectedStock?.o}</span>
           </div>
           {/* open price */}
           <div className="flex-col flex text-sm -space-y-1">
             <h1 className="text-sm"> Close</h1>
-            <span className="text-base">{quote.pc}</span>
+            <span className="text-base">{selectedStock?.pc}</span>
           </div>
           {/* Market Capitalization */}
           <div className="flex-col sm:flex text-sm -space-y-1 hidden ">
             <h1 className="text-sm"> Market Capitalization</h1>
             <span className="text-base">
-              {companyProfile.marketCapitalization}
+              {selectedStock?.marketCapitalization}
             </span>
           </div>
           {/* Share Outstanding */}
           <div className="flex-col sm:flex hidden text-sm -space-y-1">
             <h1 className="text-sm">Outstanding</h1>
-            <span className="text-base">{companyProfile.shareOutstanding}</span>
+            <span className="text-base">{selectedStock?.shareOutstanding}</span>
           </div>
         </div>
 
@@ -150,29 +145,29 @@ function HomePage() {
         {/* Share Outstanding */}
         <div className="flex-col flex text-sm -space-y-1">
           <h1 className="text-sm">Exchange</h1>
-          <span className="text-base">{companyProfile.exchange}</span>
+          <span className="text-base">{selectedStock?.exchange}</span>
         </div>
         <div className="flex-col flex text-sm -space-y-1">
           <h1 className="text-sm">I.P.O Date</h1>
-          <span className="text-base">{companyProfile.ipo}</span>
+          <span className="text-base">{selectedStock?.ipo}</span>
         </div>
         <div className="flex-col flex text-sm -space-y-1">
           <h1 className="text-sm">Industry</h1>
-          <span className="text-base">{companyProfile.finnhubIndustry}</span>
+          <span className="text-base">{selectedStock?.finnhubIndustry}</span>
         </div>
         <div className="flex-col flex text-sm -space-y-1">
           <h1 className="text-sm">Currency</h1>
-          <span className="text-base">{companyProfile.currency}</span>
+          <span className="text-base">{selectedStock?.currency}</span>
         </div>
       </div>
 
       {/* Top Performing Stocks */}
       <div className="p-2 rounded-xl h-full mx-5 bg-zinc-100 dark:bg-zinc-900 w-1/3 hidden sm:block">
         <h1 className="p-3 text-xl font-bold">
-          {stockList.length / 2} Top Performing Stocks {list.length}
+          {fetchedStockList.length} Top Performing Stocks
         </h1>
 
-        {stockList.map((e) => (
+        {fetchedStockList.map((e) => (
           <StockTile key={e.id} props={e} />
         ))}
       </div>

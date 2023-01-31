@@ -10,7 +10,7 @@ import {
   AiOutlineUser,
 } from "react-icons/ai";
 
-import { IoMdArrowDropdown } from "react-icons/io";
+import { IoMdArrowDropdown, IoMdArrowDropupCircle } from "react-icons/io";
 import { MdSettings, MdSpaceHomeTab } from "react-icons/md";
 import Header from "../components/Header";
 
@@ -22,11 +22,16 @@ import { auth } from "../firebaseConfig";
 import { FaSignOutAlt } from "react-icons/fa";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { setToFetchedList } from "../features/stockSlice";
 
+let testData = [];
 function AppLayout({ children }) {
   // This is to handle sidebar's change menu funtionality
 
   const router = useRouter();
+  const dispatch = useDispatch();
   const currentMenuIndex = router.pathname;
 
   const showHeader =
@@ -47,6 +52,41 @@ function AppLayout({ children }) {
     }
   }, []);
 
+  const stockList = useSelector((state) => state.stockList.predefinedStockList);
+  const fetchStockList = useSelector(
+    (state) => state.stockList.fetchedStockList
+  );
+
+  const getStocksData = async (symbol) => {
+    const resData = await axios
+      .get(
+        `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=cf96kkaad3i9ljn7ea10cf96kkaad3i9ljn7ea1g`
+      )
+      .catch((error) => {
+        console.error("Error", error.message);
+      });
+
+    return resData?.data;
+  };
+
+  useEffect(() => {
+    let promises = [];
+    stockList.map((stock) => {
+      promises.push(
+        getStocksData(stock.symbol).then((res) => {
+          testData.push({
+            ...stock,
+            ...res,
+          });
+        })
+      );
+    });
+
+    Promise.all(promises).then(() => {
+      dispatch(setToFetchedList(testData));
+    });
+  }, []);
+
   return (
     <div className="flex-row flex min-h-screen  justify-start items-start">
       {/* sidebar */}
@@ -54,8 +94,8 @@ function AppLayout({ children }) {
         <div className="flex-col hidden md:flex w-1/6 sticky top-0 min-h-screen  border-r border-zinc-100 dark:border-zinc-800">
           <h1 className="text-xl mx-8 my-3  flex items-center space-x-1">
             <span className="bg-purple-800 text-white px-2 py-0.5 rounded-lg  font-bold italic flex w-fit items-center space-x-1">
-              <BsFillArrowUpCircleFill />
-              <span>Stock</span>
+              <IoMdArrowDropupCircle size={20} />
+              <span>Stock </span>
             </span>
             <span>.ly</span>
           </h1>
@@ -155,10 +195,10 @@ function AppLayout({ children }) {
       )}
 
       {/* Main Area */}
-      <div className="flex-col flex flex-grow">
+      <div className="flex-col flex w-full">
         {/* header */}
         {showHeader && <Header />}
-        <div className="min-h-screen">{children}</div>
+        <div className="flex-1">{children}</div>
         {showHeader && <BottomNavbar />}
       </div>
     </div>

@@ -20,15 +20,31 @@ const initialState = {
     { id: 16, name: "Amazon.com, Inc.", symbol: "AMZN" },
   ],
   fetchedStockList: [],
+  myPortfolio: [],
+  myWatchList: [],
 };
 
 export const stockSlice = createSlice({
   name: "stockList",
   initialState,
-  reducers: {},
+  reducers: {
+    // To fetch the latest Quote data
+    setToFetchedList: (state, action) => {
+      state.fetchedStockList = action.payload;
+    },
+    // Add a stock to your portfolio by clicking on the buy button
+    addToPortfolio: (state, action) => {
+      state.myPortfolio = [...state.myPortfolio, action.payload];
+    },
+    // Add to my watch list
+    addToMyWatchList: (state, action) => {
+      state.myWatchList = [...state.myWatchList, action.payload];
+    },
+  },
 });
 
 // Action creators are generated for each case reducer function
-export const {} = stockSlice.actions;
+export const { setToFetchedList, addToPortfolio, addToMyWatchList } =
+  stockSlice.actions;
 
 export default stockSlice.reducer;

@@ -7,9 +7,7 @@ function StockTile({ props }) {
     <div className="flex-col flex bg-zinc-200 dark:bg-zinc-800 hover:text-white rounded-lg p-3 my-1 cursor-pointer hover:scale-105 dark:hover:bg-purple-600 hover:bg-purple-600">
       {/*headline */}
       <div className="flex-row flex flex-grow justify-between ">
-        <h1 className="font-semibold">
-          {props.id}. {props.symbol ?? "Name"}
-        </h1>
+        <h1 className="font-semibold">{props.symbol ?? "Name"}</h1>
         <h1 className="font-semibold">${props.c ?? "C"} </h1>
       </div>
       <span className="pb-2  text-xs ">{props.name ?? "Name"}</span>
@@ -38,11 +36,11 @@ function StockTile({ props }) {
         </div>
         {/* Difference in percentage */}
         <div
-          className={` flex-row flex items-center text-lg justify-end flex-1  text-right ${
+          className={` flex-row flex items-center text-sm justify-end flex-1  text-right ${
             props.dp > 0 ? "text-green-600" : "text-red-500  "
           }`}
         >
-          <span>{props.dp ?? "DP" + "%"}</span>
+          <span>{props.dp + "%" ?? "DP"}</span>
           {props.dp > 0 ? (
             <IoMdArrowDropupCircle size={20} />
           ) : (
