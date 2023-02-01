@@ -40,10 +40,11 @@ export const stockSlice = createSlice({
     setToFetchedList: (state, action) => {
       state.fetchedStockList = action.payload;
     },
-    // Add a stock to your portfolio by clicking on the buy button
+    // ADD a stock to your portfolio by clicking on the buy button
     addToPortfolio: (state, action) => {
       state.myPortfolio = [...state.myPortfolio, action.payload];
     },
+    // REMOVE from the portfolio
     removeFromPortfolio: (state, action) => {
       const index = state.myPortfolio.findIndex(
         (item) => item.id === action.payload.id
@@ -57,10 +58,11 @@ export const stockSlice = createSlice({
       state.myPortfolio = newList;
     },
 
-    // Add to my watch list
+    // ADD to my watch list
     addToMyWatchList: (state, action) => {
       state.myWatchList = [...state.myWatchList, action.payload];
     },
+    // REMOVE from watch list
     removeFromWatchList: (state, action) => {
       const index = state.myWatchList.findIndex(
         (item) => item.id === action.payload.id

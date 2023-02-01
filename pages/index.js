@@ -16,18 +16,28 @@ import {
 function HomePage() {
   const dispatch = useDispatch();
 
+  // THIS code will fetch all the latest stock quote from funnhub.io
   const fetchedStockList = useSelector(
     (state) => state.stockList.fetchedStockList
   );
-
+  // THIS code will get  all the stocks that are in MY_WATCH_LIST from STOCK_SLICE
   const watchList = useSelector((state) => state.stockList.myWatchList);
-  const portofolio = useSelector((state) => state.stockList.myPortfolio);
-  const gobalSelectedStock = useSelector(
+
+  // THIS code will get  all the stocks that are in MY_PORTFOLIO from STOCK_SLICE
+  const portfolio = useSelector((state) => state.stockList.myPortfolio);
+
+  // THIS code will get the current selected stock from STOCK_SLICE. - initialy it will be an empty object
+  const globalSelectedStock = useSelector(
     (state) => state.stockList.selectedStock
   );
 
+  // THIS code will help to re-render the stock detail component with latest value.
   const [reRender, setReRender] = useState(false);
 
+  // to get hold the currently selected stock
+  const [currentStock, setCurrentStock] = useState(fetchedStockList[0]);
+
+  // THIS will get the company profile from finnhub.io along with latest quote value of the stock
   const getCompanyProfileData = async (symbol) => {
     const resData = await axios
       .get(
@@ -40,16 +50,17 @@ function HomePage() {
     return resData?.data;
   };
 
+  // useEffect(() => {
+  //   dispatch(setGlobalSelectedStock());
+
+  //   console.log(globalSelectedStock);
+  // }, []);
+
   useEffect(() => {
-    dispatch(setGlobalSelectedStock(fetchedStockList[0]));
-    getCompanyProfileData(gobalSelectedStock?.symbol).then((e) => {
-      console.log({ ...gobalSelectedStock, ...e });
-      // setSelectedStock({ ...selectedStock, ...e });
-      dispatch(setGlobalSelectedStock({ ...gobalSelectedStock, ...e }));
+    getCompanyProfileData(currentStock?.symbol).then((e) => {
+      dispatch(setGlobalSelectedStock({ ...currentStock, ...e }));
     });
   }, [reRender]);
-
-  console.log("global", gobalSelectedStock);
 
   return (
     <div className="flex-row flex sm:p-5 justify-start items-start sm:relative min-h-screen">
@@ -58,15 +69,15 @@ function HomePage() {
         {/* Header- Logo,Symbol & Name */}
         <div className="flex-row flex items-center ">
           <h1 className="text-xl font-bold px-3 mr-auto">
-            #{gobalSelectedStock?.symbol}
+            #{globalSelectedStock?.symbol}
           </h1>
 
           {/* BUY */}
-          {portofolio.findIndex(
-            (item) => item.id === gobalSelectedStock?.id
+          {portfolio.findIndex(
+            (item) => item.id === globalSelectedStock?.id
           ) === -1 ? (
             <button
-              onClick={() => dispatch(addToPortfolio(gobalSelectedStock))}
+              onClick={() => dispatch(addToPortfolio(globalSelectedStock))}
               className=" sm:bg-green-700  px-3 text-white py-1 rounded-full font-semibold flex flex-row items-center space-x-2 "
             >
               <FaDollarSign />
@@ -74,7 +85,7 @@ function HomePage() {
             </button>
           ) : (
             <button
-              onClick={() => dispatch(removeFromPortfolio(gobalSelectedStock))}
+              onClick={() => dispatch(removeFromPortfolio(globalSelectedStock))}
               className=" sm:bg-red-700  px-3 text-white py-1 rounded-full font-semibold flex flex-row items-center space-x-2 "
             >
               <FaDollarSign />
@@ -83,10 +94,11 @@ function HomePage() {
           )}
           <div className="mx-2"></div>
           {/* WATCHLIST */}
-          {watchList.findIndex((item) => item.id === gobalSelectedStock?.id) ===
-          -1 ? (
+          {watchList.findIndex(
+            (item) => item.id === globalSelectedStock?.id
+          ) === -1 ? (
             <button
-              onClick={() => dispatch(addToMyWatchList(gobalSelectedStock))}
+              onClick={() => dispatch(addToMyWatchList(globalSelectedStock))}
               className="bg-purple-400 sm:bg-purple-700  px-3 text-white py-1 rounded-full font-semibold flex flex-row items-center space-x-2 "
             >
               <AiFillEye />
@@ -94,7 +106,7 @@ function HomePage() {
             </button>
           ) : (
             <button
-              onClick={() => dispatch(removeFromWatchList(gobalSelectedStock))}
+              onClick={() => dispatch(removeFromWatchList(globalSelectedStock))}
               className="bg-purple-400 sm:bg-purple-700  px-3 text-white py-1 rounded-full font-semibold flex flex-row items-center space-x-2 "
             >
               <AiFillEyeInvisible />
@@ -108,29 +120,31 @@ function HomePage() {
         {/*headline */}
         <div className="flex-row flex flex-grow items-center py-2">
           <img
-            src={gobalSelectedStock?.logo ?? "/defaultUser.jpg"}
+            src={globalSelectedStock?.logo ?? "/defaultUser.jpg"}
             alt="logo"
             className="w-10 rounded-full"
           />
 
           <div className=" px-3 flex-col flex">
-            <h1 className="text-xl font-bold ">{gobalSelectedStock?.name}</h1>
+            <h1 className="text-xl font-bold ">{globalSelectedStock?.name}</h1>
             <span className="text-xs">
-              Country: {gobalSelectedStock?.country}
+              Country: {globalSelectedStock?.country}
             </span>
           </div>
 
           <div className=" px-3 flex-col flex ml-auto">
-            <h1 className="text-xl font-bold ">${gobalSelectedStock?.c}</h1>
+            <h1 className="text-xl font-bold ">${globalSelectedStock?.c}</h1>
             <span
               className={`${
-                gobalSelectedStock?.dp > 0 ? "text-green-600" : "text-red-500  "
+                globalSelectedStock?.dp > 0
+                  ? "text-green-600"
+                  : "text-red-500  "
               }`}
             >
               {`${
-                gobalSelectedStock?.dp > 0
-                  ? `+${gobalSelectedStock?.dp}%`
-                  : `${gobalSelectedStock?.dp}%`
+                globalSelectedStock?.dp > 0
+                  ? `+${globalSelectedStock?.dp}%`
+                  : `${globalSelectedStock?.dp}%`
               }`}
             </span>
           </div>
@@ -141,36 +155,36 @@ function HomePage() {
           {/* High price */}
           <div className="flex-col flex text-sm text-green-500 -space-y-1">
             <h1 className="text-sm">Highest</h1>
-            <span className="text-base">${gobalSelectedStock?.h}</span>
+            <span className="text-base">${globalSelectedStock?.h}</span>
           </div>
           {/* Low price */}
           <div className="flex-col flex text-sm text-red-500 hover:dark:text-red-300 -space-y-1">
             <h1 className="text-sm">Lowest </h1>
-            <span className="text-base">${gobalSelectedStock?.l}</span>
+            <span className="text-base">${globalSelectedStock?.l}</span>
           </div>
           {/* open price */}
           <div className="flex-col flex text-sm -space-y-1">
             <h1 className="text-sm">Open </h1>
 
-            <span className="text-base">{gobalSelectedStock?.o}</span>
+            <span className="text-base">{globalSelectedStock?.o}</span>
           </div>
           {/* open price */}
           <div className="flex-col flex text-sm -space-y-1">
             <h1 className="text-sm"> Close</h1>
-            <span className="text-base">{gobalSelectedStock?.pc}</span>
+            <span className="text-base">{globalSelectedStock?.pc}</span>
           </div>
           {/* Market Capitalization */}
           <div className="flex-col sm:flex text-sm -space-y-1 hidden ">
             <h1 className="text-sm"> Market Capitalization</h1>
             <span className="text-base">
-              {gobalSelectedStock?.marketCapitalization}
+              {globalSelectedStock?.marketCapitalization}
             </span>
           </div>
           {/* Share Outstanding */}
           <div className="flex-col sm:flex hidden text-sm -space-y-1">
             <h1 className="text-sm">Outstanding</h1>
             <span className="text-base">
-              {gobalSelectedStock?.shareOutstanding}
+              {globalSelectedStock?.shareOutstanding}
             </span>
           </div>
         </div>
@@ -191,21 +205,21 @@ function HomePage() {
         {/* Share Outstanding */}
         <div className="flex-col flex text-sm -space-y-1">
           <h1 className="text-sm">Exchange</h1>
-          <span className="text-base">{gobalSelectedStock?.exchange}</span>
+          <span className="text-base">{globalSelectedStock?.exchange}</span>
         </div>
         <div className="flex-col flex text-sm -space-y-1">
           <h1 className="text-sm">I.P.O Date</h1>
-          <span className="text-base">{gobalSelectedStock?.ipo}</span>
+          <span className="text-base">{globalSelectedStock?.ipo}</span>
         </div>
         <div className="flex-col flex text-sm -space-y-1">
           <h1 className="text-sm">Industry</h1>
           <span className="text-base">
-            {gobalSelectedStock?.finnhubIndustry}
+            {globalSelectedStock?.finnhubIndustry}
           </span>
         </div>
         <div className="flex-col flex text-sm -space-y-1">
           <h1 className="text-sm">Currency</h1>
-          <span className="text-base">{gobalSelectedStock?.currency}</span>
+          <span className="text-base">{globalSelectedStock?.currency}</span>
         </div>
       </div>
 
@@ -220,11 +234,14 @@ function HomePage() {
             key={e.id}
             className="w-full"
             onClick={() => {
-              dispatch(setGlobalSelectedStock({ ...gobalSelectedStock, ...e }));
+              dispatch(
+                setGlobalSelectedStock({ ...globalSelectedStock, ...e })
+              );
+              setCurrentStock({ ...globalSelectedStock, ...e });
               setReRender(!reRender);
             }}
           >
-            <StockTile isActive={gobalSelectedStock.id === e.id} props={e} />
+            <StockTile isActive={globalSelectedStock?.id === e.id} props={e} />
           </button>
         ))}
       </div>
