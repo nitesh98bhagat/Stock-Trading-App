@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { MdAttachMoney } from "react-icons/md";
-import { HiCurrencyRupee } from "react-icons/hi";
+import { FaDollarSign } from "react-icons/fa";
 import StockTile from "../components/StockTile";
-import { AiFillEye } from "react-icons/ai";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { addToMyWatchList, addToPortfolio } from "../features/stockSlice";
+import {
+  addToMyWatchList,
+  addToPortfolio,
+  removeFromPortfolio,
+  removeFromWatchList,
+  setGlobalSelectedStock,
+} from "../features/stockSlice";
 
 function HomePage() {
   const dispatch = useDispatch();
@@ -14,7 +20,13 @@ function HomePage() {
     (state) => state.stockList.fetchedStockList
   );
 
-  const [selectedStock, setSelectedStock] = useState(fetchedStockList[0]);
+  const watchList = useSelector((state) => state.stockList.myWatchList);
+  const portofolio = useSelector((state) => state.stockList.myPortfolio);
+  const gobalSelectedStock = useSelector(
+    (state) => state.stockList.selectedStock
+  );
+
+  const [reRender, setReRender] = useState(false);
 
   const getCompanyProfileData = async (symbol) => {
     const resData = await axios
@@ -29,11 +41,15 @@ function HomePage() {
   };
 
   useEffect(() => {
-    getCompanyProfileData(selectedStock?.symbol).then((e) => {
-      console.log({ ...selectedStock, ...e });
-      setSelectedStock({ ...selectedStock, ...e });
+    dispatch(setGlobalSelectedStock(fetchedStockList[0]));
+    getCompanyProfileData(gobalSelectedStock?.symbol).then((e) => {
+      console.log({ ...gobalSelectedStock, ...e });
+      // setSelectedStock({ ...selectedStock, ...e });
+      dispatch(setGlobalSelectedStock({ ...gobalSelectedStock, ...e }));
     });
-  }, []);
+  }, [reRender]);
+
+  console.log("global", gobalSelectedStock);
 
   return (
     <div className="flex-row flex sm:p-5 justify-start items-start sm:relative min-h-screen">
@@ -42,23 +58,49 @@ function HomePage() {
         {/* Header- Logo,Symbol & Name */}
         <div className="flex-row flex items-center ">
           <h1 className="text-xl font-bold px-3 mr-auto">
-            #{selectedStock?.symbol}
+            #{gobalSelectedStock?.symbol}
           </h1>
 
-          <button
-            onClick={() => dispatch(addToPortfolio(selectedStock))}
-            className="bg-purple-700 px-3   text-white py-1 rounded-full font-semibold hidden sm:flex flex-row items-center space-x-2 mx-5"
-          >
-            <MdAttachMoney />
-            <span>BUY</span>
-          </button>
-          <button
-            onClick={() => dispatch(addToMyWatchList(selectedStock))}
-            className="bg-purple-400 sm:bg-purple-700  px-3 text-white py-1 rounded-full font-semibold flex flex-row items-center space-x-2 "
-          >
-            <AiFillEye />
-            <span>Add to Watchlist</span>
-          </button>
+          {/* BUY */}
+          {portofolio.findIndex(
+            (item) => item.id === gobalSelectedStock?.id
+          ) === -1 ? (
+            <button
+              onClick={() => dispatch(addToPortfolio(gobalSelectedStock))}
+              className=" sm:bg-green-700  px-3 text-white py-1 rounded-full font-semibold flex flex-row items-center space-x-2 "
+            >
+              <FaDollarSign />
+              <span>BUY</span>
+            </button>
+          ) : (
+            <button
+              onClick={() => dispatch(removeFromPortfolio(gobalSelectedStock))}
+              className=" sm:bg-red-700  px-3 text-white py-1 rounded-full font-semibold flex flex-row items-center space-x-2 "
+            >
+              <FaDollarSign />
+              <span>SELL</span>
+            </button>
+          )}
+          <div className="mx-2"></div>
+          {/* WATCHLIST */}
+          {watchList.findIndex((item) => item.id === gobalSelectedStock?.id) ===
+          -1 ? (
+            <button
+              onClick={() => dispatch(addToMyWatchList(gobalSelectedStock))}
+              className="bg-purple-400 sm:bg-purple-700  px-3 text-white py-1 rounded-full font-semibold flex flex-row items-center space-x-2 "
+            >
+              <AiFillEye />
+              <span>Add to Watchlist</span>
+            </button>
+          ) : (
+            <button
+              onClick={() => dispatch(removeFromWatchList(gobalSelectedStock))}
+              className="bg-purple-400 sm:bg-purple-700  px-3 text-white py-1 rounded-full font-semibold flex flex-row items-center space-x-2 "
+            >
+              <AiFillEyeInvisible />
+              <span>Remove from Watchlist</span>
+            </button>
+          )}
         </div>
 
         {/* Stock Details */}
@@ -66,27 +108,29 @@ function HomePage() {
         {/*headline */}
         <div className="flex-row flex flex-grow items-center py-2">
           <img
-            src={selectedStock?.logo ?? "/defaultUser.jpg"}
+            src={gobalSelectedStock?.logo ?? "/defaultUser.jpg"}
             alt="logo"
             className="w-10 rounded-full"
           />
 
           <div className=" px-3 flex-col flex">
-            <h1 className="text-xl font-bold ">{selectedStock?.name}</h1>
-            <span className="text-xs">Country: {selectedStock?.country}</span>
+            <h1 className="text-xl font-bold ">{gobalSelectedStock?.name}</h1>
+            <span className="text-xs">
+              Country: {gobalSelectedStock?.country}
+            </span>
           </div>
 
           <div className=" px-3 flex-col flex ml-auto">
-            <h1 className="text-xl font-bold ">${selectedStock?.c}</h1>
+            <h1 className="text-xl font-bold ">${gobalSelectedStock?.c}</h1>
             <span
               className={`${
-                selectedStock?.dp > 0 ? "text-green-600" : "text-red-500  "
+                gobalSelectedStock?.dp > 0 ? "text-green-600" : "text-red-500  "
               }`}
             >
               {`${
-                selectedStock?.dp > 0
-                  ? `+${selectedStock?.dp}%`
-                  : `${selectedStock?.dp}%`
+                gobalSelectedStock?.dp > 0
+                  ? `+${gobalSelectedStock?.dp}%`
+                  : `${gobalSelectedStock?.dp}%`
               }`}
             </span>
           </div>
@@ -97,35 +141,37 @@ function HomePage() {
           {/* High price */}
           <div className="flex-col flex text-sm text-green-500 -space-y-1">
             <h1 className="text-sm">Highest</h1>
-            <span className="text-base">${selectedStock?.h}</span>
+            <span className="text-base">${gobalSelectedStock?.h}</span>
           </div>
           {/* Low price */}
           <div className="flex-col flex text-sm text-red-500 hover:dark:text-red-300 -space-y-1">
             <h1 className="text-sm">Lowest </h1>
-            <span className="text-base">${selectedStock?.l}</span>
+            <span className="text-base">${gobalSelectedStock?.l}</span>
           </div>
           {/* open price */}
           <div className="flex-col flex text-sm -space-y-1">
             <h1 className="text-sm">Open </h1>
 
-            <span className="text-base">{selectedStock?.o}</span>
+            <span className="text-base">{gobalSelectedStock?.o}</span>
           </div>
           {/* open price */}
           <div className="flex-col flex text-sm -space-y-1">
             <h1 className="text-sm"> Close</h1>
-            <span className="text-base">{selectedStock?.pc}</span>
+            <span className="text-base">{gobalSelectedStock?.pc}</span>
           </div>
           {/* Market Capitalization */}
           <div className="flex-col sm:flex text-sm -space-y-1 hidden ">
             <h1 className="text-sm"> Market Capitalization</h1>
             <span className="text-base">
-              {selectedStock?.marketCapitalization}
+              {gobalSelectedStock?.marketCapitalization}
             </span>
           </div>
           {/* Share Outstanding */}
           <div className="flex-col sm:flex hidden text-sm -space-y-1">
             <h1 className="text-sm">Outstanding</h1>
-            <span className="text-base">{selectedStock?.shareOutstanding}</span>
+            <span className="text-base">
+              {gobalSelectedStock?.shareOutstanding}
+            </span>
           </div>
         </div>
 
@@ -145,19 +191,21 @@ function HomePage() {
         {/* Share Outstanding */}
         <div className="flex-col flex text-sm -space-y-1">
           <h1 className="text-sm">Exchange</h1>
-          <span className="text-base">{selectedStock?.exchange}</span>
+          <span className="text-base">{gobalSelectedStock?.exchange}</span>
         </div>
         <div className="flex-col flex text-sm -space-y-1">
           <h1 className="text-sm">I.P.O Date</h1>
-          <span className="text-base">{selectedStock?.ipo}</span>
+          <span className="text-base">{gobalSelectedStock?.ipo}</span>
         </div>
         <div className="flex-col flex text-sm -space-y-1">
           <h1 className="text-sm">Industry</h1>
-          <span className="text-base">{selectedStock?.finnhubIndustry}</span>
+          <span className="text-base">
+            {gobalSelectedStock?.finnhubIndustry}
+          </span>
         </div>
         <div className="flex-col flex text-sm -space-y-1">
           <h1 className="text-sm">Currency</h1>
-          <span className="text-base">{selectedStock?.currency}</span>
+          <span className="text-base">{gobalSelectedStock?.currency}</span>
         </div>
       </div>
 
@@ -168,7 +216,16 @@ function HomePage() {
         </h1>
 
         {fetchedStockList.map((e) => (
-          <StockTile key={e.id} props={e} />
+          <button
+            key={e.id}
+            className="w-full"
+            onClick={() => {
+              dispatch(setGlobalSelectedStock({ ...gobalSelectedStock, ...e }));
+              setReRender(!reRender);
+            }}
+          >
+            <StockTile isActive={gobalSelectedStock.id === e.id} props={e} />
+          </button>
         ))}
       </div>
     </div>

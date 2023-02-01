@@ -2,9 +2,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { IoMdArrowDropdownCircle, IoMdArrowDropupCircle } from "react-icons/io";
 
-function StockTile({ props }) {
+function StockTile({ props, isActive }) {
   return (
-    <div className="flex-col flex bg-zinc-200 dark:bg-zinc-800 hover:text-white rounded-lg p-3 my-1 cursor-pointer hover:scale-105 dark:hover:bg-purple-600 hover:bg-purple-600">
+    <div
+      className={`flex-col flex  ${
+        isActive ? "bg-purple-800" : "bg-zinc-200 dark:bg-zinc-800"
+      } hover:text-white rounded-lg p-3 my-1 cursor-pointer hover:scale-105  `}
+    >
       {/*headline */}
       <div className="flex-row flex flex-grow justify-between ">
         <h1 className="font-semibold">{props.symbol ?? "Name"}</h1>

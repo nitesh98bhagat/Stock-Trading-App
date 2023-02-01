@@ -22,12 +22,20 @@ const initialState = {
   fetchedStockList: [],
   myPortfolio: [],
   myWatchList: [],
+  selectedStock: {
+    name: "global stock",
+  },
 };
 
 export const stockSlice = createSlice({
   name: "stockList",
   initialState,
   reducers: {
+    // selected stock to show on home screen
+    setGlobalSelectedStock: (state, action) => {
+      state.selectedStock = action.payload;
+    },
+
     // To fetch the latest Quote data
     setToFetchedList: (state, action) => {
       state.fetchedStockList = action.payload;
@@ -36,15 +44,46 @@ export const stockSlice = createSlice({
     addToPortfolio: (state, action) => {
       state.myPortfolio = [...state.myPortfolio, action.payload];
     },
+    removeFromPortfolio: (state, action) => {
+      const index = state.myPortfolio.findIndex(
+        (item) => item.id === action.payload.id
+      );
+      let newList = [...state.myPortfolio];
+
+      if (index >= 0) {
+        newList.splice(index, 1);
+      }
+
+      state.myPortfolio = newList;
+    },
+
     // Add to my watch list
     addToMyWatchList: (state, action) => {
       state.myWatchList = [...state.myWatchList, action.payload];
+    },
+    removeFromWatchList: (state, action) => {
+      const index = state.myWatchList.findIndex(
+        (item) => item.id === action.payload.id
+      );
+      let newList = [...state.myWatchList];
+
+      if (index >= 0) {
+        newList.splice(index, 1);
+      }
+
+      state.myWatchList = newList;
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setToFetchedList, addToPortfolio, addToMyWatchList } =
-  stockSlice.actions;
+export const {
+  setToFetchedList,
+  addToPortfolio,
+  addToMyWatchList,
+  removeFromPortfolio,
+  removeFromWatchList,
+  setGlobalSelectedStock,
+} = stockSlice.actions;
 
 export default stockSlice.reducer;
