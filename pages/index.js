@@ -50,12 +50,6 @@ function HomePage() {
     return resData?.data;
   };
 
-  // useEffect(() => {
-  //   dispatch(setGlobalSelectedStock());
-
-  //   console.log(globalSelectedStock);
-  // }, []);
-
   useEffect(() => {
     getCompanyProfileData(currentStock?.symbol).then((e) => {
       dispatch(setGlobalSelectedStock({ ...currentStock, ...e }));

@@ -18,7 +18,6 @@ function MyPortfolioPage() {
           <span className="text-2xl">
             {"You don't have any stock in your portfolio"}
           </span>
-          <h1>{myList.length}</h1>
         </div>
       ) : (
         <div className="flex-row flex p-3 space-x-3 min-h-screen">

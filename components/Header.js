@@ -12,11 +12,12 @@ import { useSelector } from "react-redux";
 function Header() {
   const stockList = useSelector((state) => state.stockList.predefinedStockList);
 
-  const [selectedPerson, setSelectedPerson] = useState("");
+  const [selectedStock, setSelectedStock] = useState({});
   const [query, setQuery] = useState("");
 
   const handleOnChangeCombobox = async (e) => {
-    setSelectedPerson(e);
+    console.log("Header", e);
+    setSelectedStock(e);
   };
 
   const { systemTheme, theme, setTheme } = useTheme();
@@ -28,6 +29,7 @@ function Header() {
     setIsMounted(true);
   }, []);
 
+  // THIS code will render a change theme button
   const renderThemeChanger = () => {
     if (!isMounted) return null;
     const currentTheme = theme === "system" ? systemTheme : theme;
@@ -62,14 +64,11 @@ function Header() {
   };
 
   return (
-    <nav className=" flex sticky top-0 bg-white dark:bg-neutral-900  z-50 flex-row items-center justify-start w-full  sm:px-10 px-3 py-2 border-b border-zinc-100  dark:border-slate-800 ">
+    <nav className=" flex sticky top-0 bg-white dark:bg-neutral-900  z-50 flex-row items-center justify-start w-full space-x-2 sm:px-10 px-3 py-2 border-b border-zinc-100  dark:border-slate-800 ">
       {/* search bar */}
       {
         <div className="flex-row flex  items-center justify-center bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded-md w-full sm:w-1/2 md:w-1/3  mr-auto    focus-within:flex-grow  focus-within:ring-purple-300/30 focus-within:ring-1 relative">
-          <Combobox
-            value={selectedPerson}
-            onChange={(e) => handleOnChangeCombobox(e)}
-          >
+          <Combobox value={selectedStock} onChange={handleOnChangeCombobox}>
             <Combobox.Button className="pr-2">
               <BiSearch />
             </Combobox.Button>
@@ -83,7 +82,7 @@ function Header() {
 
             <Combobox.Button
               className="absolute inset-y-0 right-0 flex items-center pr-2"
-              onClick={() => setSelectedPerson("")}
+              onClick={() => setSelectedStock({})}
             >
               <MdClear />
             </Combobox.Button>

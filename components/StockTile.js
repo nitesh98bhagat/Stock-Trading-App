@@ -6,8 +6,10 @@ function StockTile({ props, isActive }) {
   return (
     <div
       className={`flex-col flex  ${
-        isActive ? "bg-purple-800" : "bg-zinc-200 dark:bg-zinc-800"
-      } hover:text-white rounded-lg p-3 my-1 cursor-pointer hover:scale-105  `}
+        isActive
+          ? "bg-purple-800 text-white"
+          : "bg-zinc-200 dark:bg-zinc-800 text-black dark:text-white"
+      } rounded-lg p-3 my-1 cursor-pointer hover:scale-105  `}
     >
       {/*headline */}
       <div className="flex-row flex flex-grow justify-between ">
